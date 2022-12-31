@@ -14,4 +14,22 @@ const constructCourseObj = (inputStr) => {
   return courseObj;
 }
 
-module.exports = { constructCourseObj }
+const getRegistrationDetails = (courseValues, details) => {
+  const [employeeEmail, courseId] = details;
+
+  const employeeName = employeeEmail.split('@')[0];
+  const registrationId = `REG-COURSE-${employeeName}-${courseValues.courseName}`;
+
+
+  const registrationDetails = {
+    registrationId,
+    employeeEmail,
+    courseId,
+    courseName: courseValues.courseName,
+    instructor: courseValues.instructor,
+    date: courseValues.date,
+    status: 'COMFIRMED'
+  }
+  return registrationDetails;
+}
+module.exports = { constructCourseObj, getRegistrationDetails }

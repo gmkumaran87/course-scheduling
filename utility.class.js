@@ -1,12 +1,30 @@
+const appConstants = require("./constant");
+
 class Utility {
 
-  addCourse(courseName, instructor) {
-    console.log(`OFFERING-${courseName}-${instructor}`);
+  addCourseValidation(arrayElements) {
+
+    if (arrayElements.length !== 5) {
+      console.log(appConstants.INPUT_DATA_ERROR)
+      return false;
+    }
+    return true;
+  }
+  addCourse(courseId) {
+    console.log(courseId);
 
   }
 
-  registeration(employeeName, courseName) {
-    console.log(`REG-COURSE-${employeeName}-${courseName}`);
+  registerationUtility(arrayElements) {
+    if (arrayElements.length !== 2) {
+      console.log(appConstants.INPUT_DATA_ERROR);
+      return false;
+    }
+    return true;
+  }
+
+  registeration(registrationId) {
+    console.log(registrationId);
   }
 
   displayError(errorMessage) {

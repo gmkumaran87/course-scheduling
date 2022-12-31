@@ -18,14 +18,25 @@ fs.readFile(filename, "utf8", (err, data) => {
         const action = line.split(' ')[0];
         const restParams = line.split(' ').slice(1);
 
+        console.log('Processing files', line);
         switch (action) {
             case appConstants.ADD_COURSE:
-                const { courseName, instructor } = course.createCourse(restParams);
-                utility.addCourse(courseName, instructor);
+                if (!utility.addCourseValidation(restParams)) {
+                    break
+                }
+                const courseId = course.createCourse(restParams);
+                utility.addCourse(courseId);
                 break;
             case appConstants.REGISTER: {
-                course.registration(restParams);
-                return;
+                console.log('REGISTER', action)
+                if (!utility.registerationUtility(restParams)) {
+                    return;
+                }
+                const { status, registrationId = '' } = course.registration(restParams);
+                status === 'ACCEPTED' ?
+                    utility.registeration(registrationId)
+                    : utility.registeration(status);
+                break;
             }
             case appConstants.CANCEL: {
                 return;
