@@ -23,8 +23,11 @@ class Utility {
     return true;
   }
 
-  registeration(registrationId) {
-    console.log(registrationId);
+  registeration(registrationStatus) {
+    const { status, registrationId = '' } = registrationStatus
+    status === 'ACCEPTED' ?
+      console.log(`${registrationId} ${status}`)
+      : console.log(status);
   }
 
   displayError(errorMessage) {

@@ -10,6 +10,7 @@ const constructCourseObj = (inputStr) => {
   courseObj.instructor = instructor;
   courseObj.courseName = courseName;
   courseObj.availableSeats = maxEmp;
+  courseObj.registrations = [];
 
   return courseObj;
 }
@@ -20,14 +21,13 @@ const getRegistrationDetails = (courseValues, details) => {
   const employeeName = employeeEmail.split('@')[0];
   const registrationId = `REG-COURSE-${employeeName}-${courseValues.courseName}`;
 
-
   const registrationDetails = {
     registrationId,
     employeeEmail,
     courseId,
     courseName: courseValues.courseName,
     instructor: courseValues.instructor,
-    date: courseValues.date,
+    date: courseValues.courseDate,
     status: 'COMFIRMED'
   }
   return registrationDetails;

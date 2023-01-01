@@ -18,7 +18,6 @@ fs.readFile(filename, "utf8", (err, data) => {
         const action = line.split(' ')[0];
         const restParams = line.split(' ').slice(1);
 
-        console.log('Processing files', line);
         switch (action) {
             case appConstants.ADD_COURSE:
                 if (!utility.addCourseValidation(restParams)) {
@@ -28,21 +27,21 @@ fs.readFile(filename, "utf8", (err, data) => {
                 utility.addCourse(courseId);
                 break;
             case appConstants.REGISTER: {
-                console.log('REGISTER', action)
                 if (!utility.registerationUtility(restParams)) {
                     return;
                 }
-                const { status, registrationId = '' } = course.registration(restParams);
-                status === 'ACCEPTED' ?
-                    utility.registeration(registrationId)
-                    : utility.registeration(status);
+                const registrationStatus = course.registration(restParams);
+                utility.registeration(registrationStatus);
+
                 break;
             }
             case appConstants.CANCEL: {
-                return;
+                course.cancelRegistration(restParams[0]);
+                break;
             }
             case appConstants.ALLOT_COURSE: {
-                return;
+                course.courseAllotment(restParams[0]);
+                break;
             }
             default:
                 throw new Error('Invalid registration type');
