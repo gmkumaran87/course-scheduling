@@ -1,4 +1,4 @@
-const appConstants = require("./constant");
+const appConstants = require("../constants/constant");
 
 class Utility {
 
@@ -37,9 +37,19 @@ class Utility {
   cancellation(registrationId, status) {
     console.log(`${registrationId} CANCEL_${status}`)
   }
-  courseAllotment({ registrationId, employeeName, courseName, instructor, employeeEmail, courseId, date, status }) {
+  courseAllotment(objArray) {
 
-    console.log(`${registrationId} ${employeeEmail} ${courseId} ${courseName} ${instructor} ${date} ${status}`)
+    objArray.sort((a, b) => {
+      return a.registrationId < b.registrationId
+        ? -1
+        : (a.registrationId > b.registrationId)
+          ? 1
+          : 0
+    }).forEach(obj => {
+      const { registrationId, employeeName, courseName, instructor, employeeEmail, courseId, date, status } = obj;
+      console.log(`${registrationId} ${employeeEmail} ${courseId} ${courseName} ${instructor} ${date} ${status}`);
+    }
+    );
   }
 }
 module.exports = Utility;

@@ -1,6 +1,6 @@
-const appConstants = require('./constant');
+const appConstants = require('../constants/constant');
 const { constructCourseObj, getRegistrationDetails } = require('./helper');
-const Utility = require('./utility.class')
+
 class Course {
 
   constructor() {
@@ -45,9 +45,9 @@ class Course {
 
   // Course cancellations
   cancelRegistration(registrationId) {
-    const utility = new Utility();
     if (this.allotment) {
-      utility.displayError(appConstants.CANCEL_REJECTED);
+      return appConstants.CANCEL_REJECTED;
+
     } else if (this.registrationMap.has(registrationId)) {
 
       const registrationDetails = this.registrationMap.get(registrationId);
@@ -60,23 +60,23 @@ class Course {
       // Removing the registration details
       this.courseMap.set(courseId, newObj);
       this.registrationMap.delete(registrationId);
-      utility.displayError(appConstants.CANCEL_ACCEPTED);
+      return appConstants.CANCEL_ACCEPTED;
     } else {
-      utility.displayError(appConstants.COURSE_NOT_FOUND_ERROR);
+      return appConstants.COURSE_NOT_FOUND_ERROR;
     }
   }
 
   courseAllotment(courseId) {
-    const utility = new Utility();
+    const registrationArray = [];
 
     if (this.courseMap.has(courseId)) {
       const registrationIds = this.courseMap.get(courseId).registrations;
 
       registrationIds.forEach(registrationId => {
         const registrationObj = this.registrationMap.get(registrationId);
-        utility.courseAllotment(registrationObj);
+        registrationArray.push(registrationObj);
       });
-
+      return registrationArray;
     }
   }
 }

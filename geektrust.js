@@ -1,7 +1,7 @@
 const fs = require("fs")
-const appConstants = require('./constant');
-const Course = require("./course.class");
-const Utility = require("./utility.class");
+const appConstants = require('./constants/constant');
+const Course = require("./course/course.class");
+const Utility = require("./course/utility.class");
 
 const course = new Course();
 const utility = new Utility();
@@ -36,11 +36,14 @@ fs.readFile(filename, "utf8", (err, data) => {
                 break;
             }
             case appConstants.CANCEL: {
-                course.cancelRegistration(restParams[0]);
+                const status = course.cancelRegistration(restParams[0]);
+                utility.displayError(status);
+
                 break;
             }
             case appConstants.ALLOT_COURSE: {
-                course.courseAllotment(restParams[0]);
+                const objArray = course.courseAllotment(restParams[0]);
+                utility.courseAllotment(objArray);
                 break;
             }
             default:
