@@ -19,15 +19,13 @@ const getEmployeeName = (emailId) => emailId.split('@')[0];
 
 const getRegistrationId = (employeeName, courseName) => `REG-COURSE-${employeeName}-${courseName}`;
 
-const getRegistrationDetails = (courseValues, details) => {
-  const [employeeEmail, courseId] = details;
+const getRegistrationDetails = (courseId, courseValues, employeeEmail) => {
 
   const employeeName = getEmployeeName(employeeEmail);
   const registrationId = getRegistrationId(employeeName, courseValues.courseName);
 
   const registrationDetails = {
     registrationId,
-    employeeName,
     employeeEmail,
     courseId,
     courseName: courseValues.courseName,

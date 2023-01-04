@@ -15,75 +15,80 @@ class Course {
     return courseId;
   }
 
-  registration(details) {
-    const [employeeEmail, courseId] = details;
-    const courseValues = this.courseMap.get(courseId);
-
+  checkEmployeeRegistered(employeeEmail, courseId) {
     const employeeName = getEmployeeName(employeeEmail);
     const courseName = courseId.split('-')[1];
     const registrationId = getRegistrationId(employeeName, courseName);
+    return this.registrationMap.has(registrationId);
+  }
 
-    if (this.registrationMap.has(registrationId)) {
-      return { status: appConstants.ALREADY_REGISTERED };
+  registerEmployee(courseId, employeeEmail) {
+    const courseValues = this.courseMap.get(courseId);
+    if (this.courseMap.has(courseId)) {
+      // Getting registration details
+      const registrationDetails = getRegistrationDetails(courseId, courseValues, employeeEmail);
+      // Reducing a seat from the courseMap
+      this.courseMap.set(courseId, {
+        ...courseValues,
+        availableSeats: courseValues.availableSeats - 1,
+        registrations: [...courseValues.registrations, registrationDetails.registrationId]
+      });
+      // Create a new record in the registration
+      this.registrationMap.set(registrationDetails.registrationId, registrationDetails);
+      return registrationDetails.registrationId
     }
-    if (courseValues.availableSeats > 0) {
-      if (this.courseMap.has(courseId)) {
-        // Getting registration details
-        const registrationDetails = getRegistrationDetails(courseValues, details);
+  }
 
-        // Reducing a seat from the courseMap
-        this.courseMap.set(courseId, {
-          ...courseValues,
-          availableSeats: courseValues.availableSeats - 1,
-          registrations: [...courseValues.registrations, registrationDetails.registrationId]
-        });
-
-        // Create a new record in the registration
-        this.registrationMap.set(registrationDetails.registrationId, registrationDetails);
-        return { status: 'ACCEPTED', registrationId: registrationDetails.registrationId }
-      }
+  registration(details) {
+    const [employeeEmail, courseId] = details;
+    const { availableSeats } = this.courseMap.get(courseId);
+    if (this.checkEmployeeRegistered(employeeEmail, courseId)) {
+      return { status: appConstants.ALREADY_REGISTERED };
+    } else if (!this.courseMap.has(courseId)) {
+      return { status: appConstants.COURSE_NOT_REGISTERED };
+    } else if (availableSeats > 0) {
+      const registrationId = this.registerEmployee(courseId, employeeEmail)
+      return { status: 'ACCEPTED', registrationId }
     } else {
       return { status: appConstants.COURSE_FULL_ERROR };
     }
+  }
 
+  deleteEmployeeRegistration(registrationId) {
+    const registrationDetails = this.registrationMap.get(registrationId);
+    const courseId = registrationDetails.courseId;
+    const courseObj = this.courseMap.get(courseId);
+    const filteredRegistration = courseObj.registrations.filter(el => el !== registrationId);
+    const newObj = { ...courseObj, registrations: filteredRegistration };
+    // Removing the registration details
+    this.courseMap.set(courseId, newObj);
+    this.registrationMap.delete(registrationId);
+    return { status: 'DELETED' };
   }
 
   // Course cancellations
   cancelRegistration(registrationId) {
     if (this.allotment) {
-      return appConstants.CANCEL_REJECTED;
-
+      return { status: appConstants.CANCEL_REJECTED, registrationId };
     } else if (this.registrationMap.has(registrationId)) {
-
-      const registrationDetails = this.registrationMap.get(registrationId);
-      const courseId = registrationDetails.courseId;
-
-      const courseObj = this.courseMap.get(courseId);
-      const filteredRegistration = courseObj.registrations.filter(el => el !== registrationId);
-      const newObj = { ...courseObj, registrations: filteredRegistration };
-
-      // Removing the registration details
-      this.courseMap.set(courseId, newObj);
-      this.registrationMap.delete(registrationId);
-      return appConstants.CANCEL_ACCEPTED;
+      const result = this.deleteEmployeeRegistration(registrationId);
+      return result.status === 'DELETED'
+        ? { status: appConstants.CANCEL_ACCEPTED, registrationId }
+        : '';
     } else {
-      return appConstants.COURSE_NOT_FOUND_ERROR;
+      return { status: appConstants.COURSE_NOT_FOUND_ERROR, registrationId };
     }
   }
 
   courseAllotment(courseId) {
     const registrationArray = [];
     let status = '';
-
     if (this.courseMap.has(courseId)) {
       const { minEmp, registrations } = this.courseMap.get(courseId);
-
       registrations.forEach(registrationId => {
         // If the minimum registration is not met, then cancel the course Offering
-        status = registrations.length < minEmp ? 'CANCELLED' : 'COMFIRMED';
-
+        status = registrations.length < minEmp ? appConstants.COURSE_CANCELED : 'CONFIRMED';
         const registrationObj = this.registrationMap.get(registrationId);
-
         const newObj = { ...registrationObj, status: status }
         registrationArray.push(newObj);
       });

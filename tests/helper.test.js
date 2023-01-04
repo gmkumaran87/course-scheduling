@@ -19,14 +19,14 @@ describe('Testing the helper.js function', () => {
   });
 
   test('Construct the Registration object', () => {
-    const details = ['WOO@GMAIL.COM', 'OFFERING-PYTHON-JOHN'];
+
     const courseDetails = {
       courseName: 'PYTHON',
       instructor: 'JOHN',
       courseDate: '05062022'
     };
 
-    expect(getRegistrationDetails(courseDetails, details)).toEqual({
+    expect(getRegistrationDetails('OFFERING-PYTHON-JOHN', courseDetails, 'WOO@GMAIL.COM')).toEqual({
       registrationId: 'REG-COURSE-WOO-PYTHON',
       employeeEmail: 'WOO@GMAIL.COM',
       courseId: 'OFFERING-PYTHON-JOHN',

@@ -17,6 +17,12 @@ describe('Testing the Course class file', () => {
     })
   });
 
+  test('Check employee registration', () => {
+    const employeeEmail = 'WOO@GMAIL.COM';
+    const courseId = 'OFFERING-PYTHON-JOHN';
+
+    expect(course.checkEmployeeRegistered(employeeEmail, courseId)).toBe(true);
+  });
 
   test('Testing the Registration method', () => {
     const details = ['BOB@GMAIL.COM', 'OFFERING-PYTHON-JOHN']
@@ -36,12 +42,18 @@ describe('Testing the Course class file', () => {
   });
 
   test('Testing the Cancel registration method', () => {
-    expect(course.cancelRegistration('REG-COURSE-WOO-PYTHON')).toBe('CANCEL_ACCEPTED')
+    expect(course.cancelRegistration('REG-COURSE-WOO-PYTHON')).toEqual({
+      registrationId: 'REG-COURSE-WOO-PYTHON',
+      status: 'CANCEL_ACCEPTED'
+    });
   });
 
   test('Testing the Cancel registration method if Allotment is done', () => {
     course.allotment = true;
-    expect(course.cancelRegistration('REG-COURSE-WOO-PYTHON')).toBe('CANCEL_REJECTED');
+    expect(course.cancelRegistration('REG-COURSE-WOO-PYTHON')).toEqual({
+      registrationId: "REG-COURSE-WOO-PYTHON",
+      status: 'CANCEL_REJECTED'
+    });
   })
 
   test('Testing the Registration method and should return COURSE_FULL_ERROR', () => {

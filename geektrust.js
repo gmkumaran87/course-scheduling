@@ -31,13 +31,14 @@ fs.readFile(filename, "utf8", (err, data) => {
                     break;
                 }
                 const registrationStatus = course.registration(restParams);
+                // console.log('After registration', registrationStatus);
                 utility.registeration(registrationStatus);
 
                 break;
             }
             case appConstants.CANCEL: {
-                const status = course.cancelRegistration(restParams[0]);
-                utility.displayError(status);
+                const cancellationStatus = course.cancelRegistration(restParams[0]);
+                utility.cancellation(cancellationStatus);
 
                 break;
             }

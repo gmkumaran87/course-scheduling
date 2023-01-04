@@ -3,7 +3,7 @@ class Utility {
 
   addCourseValidation(arrayElements) {
 
-    if (arrayElements.length !== 5) {
+    if (arrayElements.length !== appConstants.COURSE_ARR_LENGTH) {
       console.log(appConstants.INPUT_DATA_ERROR)
       return false;
     }
@@ -15,7 +15,7 @@ class Utility {
   }
 
   registerationUtility(arrayElements) {
-    if (arrayElements.length !== 2) {
+    if (arrayElements.length !== appConstants.REGISTRATION_ARR_LENGTH) {
       console.log(appConstants.INPUT_DATA_ERROR);
       return false;
     }
@@ -33,8 +33,8 @@ class Utility {
     console.log(errorMessage);
   }
 
-  cancellation(registrationId, status) {
-    console.log(`${registrationId} CANCEL_${status}`)
+  cancellation({ registrationId, status }) {
+    console.log(`${registrationId} ${status}`)
   }
   courseAllotment(objArray) {
 
@@ -45,8 +45,8 @@ class Utility {
           ? 1
           : 0
     }).forEach(obj => {
-      const { registrationId, employeeName, courseName, instructor, employeeEmail, courseId, date, status } = obj;
-      console.log(`${registrationId} ${employeeName} ${employeeEmail} ${courseId} ${courseName} ${instructor} ${date} ${status}`);
+      const { registrationId, courseName, instructor, employeeEmail, courseId, date, status } = obj;
+      console.log(`${registrationId} ${employeeEmail} ${courseId} ${courseName} ${instructor} ${date} ${status}`);
     }
     );
   }
