@@ -1,4 +1,4 @@
-const { constructCourseObj, getRegistrationDetails } = require('../course/helper.js')
+const { constructCourseObj, getRegistrationDetails, getEmployeeName, getRegistrationId } = require('../course/helper.js')
 
 describe('Testing the helper.js function', () => {
   test('Construct an object with the given properties', () => {
@@ -35,6 +35,14 @@ describe('Testing the helper.js function', () => {
       date: '05062022',
       status: 'COMFIRMED'
     })
+  });
+
+  test('Return the employee name when employee email-id is provided', () => {
+    expect(getEmployeeName('muthu@gmail.com')).toBe('muthu');
+  });
+
+  test('Return the registrationId when entered employee name and course name is provided', () => {
+    expect(getRegistrationId('MUTHU', 'PYTHON')).toBe('REG-COURSE-MUTHU-PYTHON')
   });
 
 })

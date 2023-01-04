@@ -15,14 +15,19 @@ const constructCourseObj = (inputStr) => {
   return courseObj;
 }
 
+const getEmployeeName = (emailId) => emailId.split('@')[0];
+
+const getRegistrationId = (employeeName, courseName) => `REG-COURSE-${employeeName}-${courseName}`;
+
 const getRegistrationDetails = (courseValues, details) => {
   const [employeeEmail, courseId] = details;
 
-  const employeeName = employeeEmail.split('@')[0];
-  const registrationId = `REG-COURSE-${employeeName}-${courseValues.courseName}`;
+  const employeeName = getEmployeeName(employeeEmail);
+  const registrationId = getRegistrationId(employeeName, courseValues.courseName);
 
   const registrationDetails = {
     registrationId,
+    employeeName,
     employeeEmail,
     courseId,
     courseName: courseValues.courseName,
@@ -32,4 +37,4 @@ const getRegistrationDetails = (courseValues, details) => {
   }
   return registrationDetails;
 }
-module.exports = { constructCourseObj, getRegistrationDetails }
+module.exports = { constructCourseObj, getRegistrationDetails, getEmployeeName, getRegistrationId }

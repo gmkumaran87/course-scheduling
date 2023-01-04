@@ -27,6 +27,14 @@ describe('Testing the Course class file', () => {
     })
   });
 
+  test('Testing the duplicate registration, if entered registered employee name', () => {
+    const details = ['BOB@GMAIL.COM', 'OFFERING-PYTHON-JOHN']
+
+    expect(course.registration(details)).toEqual({
+      status: 'ALREADY_REGISTERED',
+    })
+  });
+
   test('Testing the Cancel registration method', () => {
     expect(course.cancelRegistration('REG-COURSE-WOO-PYTHON')).toBe('CANCEL_ACCEPTED')
   });

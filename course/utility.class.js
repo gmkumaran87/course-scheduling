@@ -1,5 +1,4 @@
 const appConstants = require("../constants/constant");
-
 class Utility {
 
   addCourseValidation(arrayElements) {
@@ -47,7 +46,7 @@ class Utility {
           : 0
     }).forEach(obj => {
       const { registrationId, employeeName, courseName, instructor, employeeEmail, courseId, date, status } = obj;
-      console.log(`${registrationId} ${employeeEmail} ${courseId} ${courseName} ${instructor} ${date} ${status}`);
+      console.log(`${registrationId} ${employeeName} ${employeeEmail} ${courseId} ${courseName} ${instructor} ${date} ${status}`);
     }
     );
   }

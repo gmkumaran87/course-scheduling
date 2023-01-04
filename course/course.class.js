@@ -1,5 +1,5 @@
 const appConstants = require('../constants/constant');
-const { constructCourseObj, getRegistrationDetails } = require('./helper');
+const { constructCourseObj, getRegistrationDetails, getEmployeeName, getRegistrationId } = require('./helper');
 
 class Course {
 
@@ -19,10 +19,15 @@ class Course {
     const [employeeEmail, courseId] = details;
     const courseValues = this.courseMap.get(courseId);
 
+    const employeeName = getEmployeeName(employeeEmail);
+    const courseName = courseId.split('-')[1];
+    const registrationId = getRegistrationId(employeeName, courseName);
+
+    if (this.registrationMap.has(registrationId)) {
+      return { status: appConstants.ALREADY_REGISTERED };
+    }
     if (courseValues.availableSeats > 0) {
-
       if (this.courseMap.has(courseId)) {
-
         // Getting registration details
         const registrationDetails = getRegistrationDetails(courseValues, details);
 
@@ -68,13 +73,19 @@ class Course {
 
   courseAllotment(courseId) {
     const registrationArray = [];
+    let status = '';
 
     if (this.courseMap.has(courseId)) {
-      const registrationIds = this.courseMap.get(courseId).registrations;
+      const { minEmp, registrations } = this.courseMap.get(courseId);
 
-      registrationIds.forEach(registrationId => {
+      registrations.forEach(registrationId => {
+        // If the minimum registration is not met, then cancel the course Offering
+        status = registrations.length < minEmp ? 'CANCELLED' : 'COMFIRMED';
+
         const registrationObj = this.registrationMap.get(registrationId);
-        registrationArray.push(registrationObj);
+
+        const newObj = { ...registrationObj, status: status }
+        registrationArray.push(newObj);
       });
       return registrationArray;
     }

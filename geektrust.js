@@ -28,7 +28,7 @@ fs.readFile(filename, "utf8", (err, data) => {
                 break;
             case appConstants.REGISTER: {
                 if (!utility.registerationUtility(restParams)) {
-                    return;
+                    break;
                 }
                 const registrationStatus = course.registration(restParams);
                 utility.registeration(registrationStatus);
@@ -53,5 +53,3 @@ fs.readFile(filename, "utf8", (err, data) => {
     }
 
 })
-let used = process.memoryUsage().heapUsed / 1024 / 1024;
-console.log('Memory usage', Math.round(used * 100) / 100 + 'MB')
